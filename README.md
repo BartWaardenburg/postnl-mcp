@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple.svg)](https://modelcontextprotocol.io)
+[![CI](https://github.com/bartwaardenburg/postnl-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/bartwaardenburg/postnl-mcp/actions/workflows/ci.yml)
 
 A community-built [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server for the [PostNL API](https://developer.postnl.nl/). Create shipments, generate barcodes, track parcels, calculate delivery dates, and find pickup locations — all through natural language via any MCP-compatible AI client.
 
@@ -22,6 +23,7 @@ A community-built [Model Context Protocol](https://modelcontextprotocol.io) (MCP
 - **Response caching** with configurable TTL and automatic invalidation on writes
 - **Rate limit handling** with exponential backoff and `Retry-After` header support
 - **Toolset filtering** to expose only the tool categories you need
+- **Docker support** for containerized deployment via GHCR
 - **Actionable error messages** with context-aware recovery suggestions
 
 ## Supported Clients
@@ -140,6 +142,27 @@ Add to your Zed settings (`~/.zed/settings.json` on macOS, `~/.config/zed/settin
     }
   }
 }
+```
+
+### Docker
+
+```bash
+docker run -i --rm \
+  -e POSTNL_API_KEY=your-api-key \
+  -e POSTNL_CUSTOMER_CODE=your-customer-code \
+  -e POSTNL_CUSTOMER_NUMBER=your-customer-number \
+  ghcr.io/bartwaardenburg/postnl-mcp
+```
+
+### Codex CLI (TOML config alternative)
+
+If you prefer editing `~/.codex/config.toml` directly:
+
+```toml
+[mcp_servers.postnl-mcp]
+command = "npx"
+args = ["-y", "postnl-mcp"]
+env = { "POSTNL_API_KEY" = "your-api-key", "POSTNL_CUSTOMER_CODE" = "your-customer-code", "POSTNL_CUSTOMER_NUMBER" = "your-customer-number" }
 ```
 
 ### Other MCP Clients

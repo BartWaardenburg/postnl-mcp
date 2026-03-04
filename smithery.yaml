@@ -1,0 +1,28 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - apiKey
+      - customerCode
+      - customerNumber
+    properties:
+      apiKey:
+        type: string
+        description: PostNL API key
+      customerCode:
+        type: string
+        description: PostNL customer code
+      customerNumber:
+        type: string
+        description: PostNL customer number
+  commandFunction: |
+    (config) => ({
+      command: 'npx',
+      args: ['-y', 'postnl-mcp'],
+      env: {
+        POSTNL_API_KEY: config.apiKey,
+        POSTNL_CUSTOMER_CODE: config.customerCode,
+        POSTNL_CUSTOMER_NUMBER: config.customerNumber
+      }
+    })
