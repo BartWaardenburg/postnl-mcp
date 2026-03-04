@@ -5,6 +5,7 @@
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org/)
 [![MCP](https://img.shields.io/badge/MCP-compatible-purple.svg)](https://modelcontextprotocol.io)
 [![CI](https://github.com/bartwaardenburg/postnl-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/bartwaardenburg/postnl-mcp/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/BartWaardenburg/9cfb0ee7e59fa9ea1b0e31d16d0deb5a/raw/postnl-mcp-coverage.json)](https://bartwaardenburg.github.io/postnl-mcp/)
 
 A community-built [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server for the [PostNL API](https://developer.postnl.nl/). Create shipments, generate barcodes, track parcels, calculate delivery dates, and find pickup locations — all through natural language via any MCP-compatible AI client.
 
