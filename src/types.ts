@@ -242,9 +242,10 @@ export interface PostNLDeliveryDateRequest {
   CutOffTime?: string;
   PostalCode: string;
   CountryCode?: string;
+  OriginCountryCode?: string;
   City?: string;
   Street?: string;
-  HouseNumber?: number;
+  HouseNr?: string;
   HouseNrExt?: string;
   Options?: string[];
 }
@@ -269,6 +270,7 @@ export interface PostNLTimeframeRequest {
   HouseNrExt?: string;
   City?: string;
   Street?: string;
+  AllowSundaySorting?: boolean;
   Options?: string[];
 }
 

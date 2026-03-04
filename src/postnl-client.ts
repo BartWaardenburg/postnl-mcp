@@ -126,8 +126,9 @@ export class PostNLClient {
     cutOffTime?: string;
     postalCode: string;
     countryCode?: string;
+    originCountryCode?: string;
     city?: string;
-    houseNumber?: number;
+    houseNr?: string;
     houseNrExt?: string;
     options?: string[];
   }): Promise<PostNLDeliveryDateResponse> {
@@ -145,11 +146,14 @@ export class PostNLClient {
     if (options.countryCode) {
       query.set("CountryCode", options.countryCode);
     }
+    if (options.originCountryCode) {
+      query.set("OriginCountryCode", options.originCountryCode);
+    }
     if (options.city) {
       query.set("City", options.city);
     }
-    if (options.houseNumber !== undefined) {
-      query.set("HouseNumber", String(options.houseNumber));
+    if (options.houseNr) {
+      query.set("HouseNr", options.houseNr);
     }
     if (options.houseNrExt) {
       query.set("HouseNrExt", options.houseNrExt);
@@ -192,6 +196,9 @@ export class PostNLClient {
     }
     if (options.Street) {
       query.set("Street", options.Street);
+    }
+    if (options.AllowSundaySorting !== undefined) {
+      query.set("AllowSundaySorting", String(options.AllowSundaySorting));
     }
     if (options.Options?.length) {
       for (const opt of options.Options) {
@@ -245,11 +252,14 @@ export class PostNLClient {
       query.set("Longitude", String(options.Longitude));
     }
 
+    const isGeocode = options.Latitude !== undefined && options.Longitude !== undefined;
+    const endpoint = isGeocode ? "/shipment/v2_1/locations/nearest/geocode" : "/shipment/v2_1/locations/nearest";
+
     return this.cachedRequest(
       `locations:${query.toString()}`,
       600_000,
       () => this.request<PostNLLocationsResponse>(
-        `/shipment/v2_1/locations/nearest?${query.toString()}`,
+        `${endpoint}?${query.toString()}`,
       ),
     );
   }
