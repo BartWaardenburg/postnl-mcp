@@ -398,6 +398,13 @@ Once connected, you can interact with the PostNL API using natural language:
 - "Find PostNL pickup points near postal code 3011 AA"
 - "Get details of PostNL location 176227"
 
+## Community
+
+- Support: [SUPPORT.md](SUPPORT.md)
+- Security reporting: [SECURITY.md](SECURITY.md)
+- Contributing guidelines: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Bug reports and feature requests: [Issues](https://github.com/bartwaardenburg/postnl-mcp/issues)
+
 ## Development
 
 ```bash
