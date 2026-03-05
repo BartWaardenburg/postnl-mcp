@@ -59,13 +59,15 @@ If your app wants JSON, paste this and adapt the top-level key name to your clie
 
 ```json
 {
-  "postnl-mcp": {
-    "command": "npx",
-    "args": ["-y", "postnl-mcp"],
-    "env": {
-      "POSTNL_API_KEY": "your-api-key",
-      "POSTNL_CUSTOMER_CODE": "your-customer-code",
-      "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
+  "<servers-key>": {
+    "postnl-mcp": {
+      "command": "npx",
+      "args": ["-y", "postnl-mcp"],
+      "env": {
+        "POSTNL_API_KEY": "your-api-key",
+        "POSTNL_CUSTOMER_CODE": "your-customer-code",
+        "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
+      }
     }
   }
 }
@@ -101,108 +103,164 @@ If your app wants JSON, paste this and adapt the top-level key name to your clie
 <details>
 <summary><strong>Advanced setup and supported clients (expand)</strong></summary>
 
-This MCP server is not tied to one coding agent. It works with any MCP-compatible client/runtime that can start a stdio MCP server.
+This MCP server is not tied to one coding agent. It works with any MCP-compatible client or agent runtime that can start a stdio MCP server.
 
-| Client / runtime | Easiest setup |
+| Client / runtime | Docs |
 |---|---|
-| Claude Desktop + Cowork | JSON config (`claude_desktop_config.json`) |
-| Claude Code | One-liner: `claude mcp add` |
-| Codex CLI / IDE | One-liner: `codex mcp add` |
-| Gemini CLI | One-liner: `gemini mcp add` |
-| VS Code (Copilot) | Command Palette: `MCP: Add Server` |
-| Cursor | JSON config file |
-| Windsurf | JSON config file |
-| Cline | UI settings |
-| Zed | JSON settings file |
+| Claude Code | [MCP in Claude Code](https://docs.anthropic.com/en/docs/claude-code/mcp) |
+| Anthropic API (Messages API) | [Remote MCP servers](https://docs.anthropic.com/en/docs/agents-and-tools/remote-mcp-servers) |
+| Codex CLI (OpenAI) | [Codex CLI docs](https://developers.openai.com/codex/cli) |
+| Gemini CLI (Google) | [Gemini CLI MCP server docs](https://google-gemini.github.io/gemini-cli/docs/tools/mcp-server.html) |
+| VS Code (Copilot) | [Use MCP servers in VS Code](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) |
+| Claude Desktop | [MCP in Claude Desktop](https://docs.anthropic.com/en/docs/claude-desktop/mcp) |
+| Cursor | [Cursor docs](https://cursor.com/docs) |
+| Windsurf | [Windsurf MCP docs](https://docs.windsurf.com/windsurf/cascade/mcp) |
+| Cline | [Cline MCP docs](https://docs.cline.bot/mcp/) |
+| Zed | [Zed context servers docs](https://zed.dev/docs/assistant/context-servers) |
 | Any other MCP host | Use command/args/env from [Generic MCP Server Config](#generic-mcp-server-config) |
 
 ### Claude Ecosystem Notes
 
-Claude has several concepts that are easy to mix up:
+Claude currently has multiple MCP-related concepts that are easy to mix up:
 
-- **Local MCP servers (Claude Desktop):** configured in `claude_desktop_config.json` and started on your machine ([docs](https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop)).
-- **Cowork:** reuses MCP servers connected in Claude Desktop ([docs](https://support.claude.com/en/articles/13345190-get-started-with-cowork)).
-- **Connectors:** remote integrations managed in Claude ([docs](https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities)).
-- **Cowork plugins:** Claude-specific workflow packaging ([docs](https://support.claude.com/en/articles/13837440-use-plugins-in-cowork)). Useful in Claude, not portable as generic MCP server config in other hosts.
+- **Local MCP servers (Claude Desktop):** defined in `claude_desktop_config.json` and started on your machine ([docs](https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop)).
+- **Cowork:** reuses the MCP servers connected in Claude Desktop ([docs](https://support.claude.com/en/articles/13345190-get-started-with-cowork)).
+- **Connectors:** remote MCP integrations managed in Claude ([docs](https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities)).
+- **Cowork plugins:** Claude-specific workflow packaging (instructions + tools/data integrations) ([docs](https://support.claude.com/en/articles/13837440-use-plugins-in-cowork)). Useful in Claude, but not portable as a generic MCP server config for other agent clients.
 
-### Setup (Power Users)
+Verified against vendor docs on **2026-03-05**.
 
-If Quick Start works in your client, you can skip this section.
+## Setup (Power Users)
+
+If Quick Start worked in your client, you can skip this section. These are additional per-client setup options and CLI one-liners.
 
 ### Generic MCP Server Config
 
-Use this canonical config for any stdio-capable MCP host:
+Use this as the baseline in any host:
 
 - **Command:** `npx`
 - **Args:** `["-y", "postnl-mcp"]`
-- **Required env vars:** `POSTNL_API_KEY`, `POSTNL_CUSTOMER_CODE`, `POSTNL_CUSTOMER_NUMBER` (see [Required](#required))
+- **Required env vars:** `POSTNL_API_KEY`, `POSTNL_CUSTOMER_CODE`, `POSTNL_CUSTOMER_NUMBER`
+- **Optional env vars:** `POSTNL_CACHE_TTL`, `POSTNL_MAX_RETRIES`, `POSTNL_TOOLSETS` (see [Configuration](#configuration))
 
-Minimal JSON shape (adapt key names to your client, e.g. `mcpServers`, `servers`, or `context_servers`):
+Minimal JSON (adapt the top-level key to your host):
 
 ```json
 {
-  "postnl-mcp": {
-    "command": "npx",
-    "args": ["-y", "postnl-mcp"],
-    "env": {
-      "POSTNL_API_KEY": "your-api-key",
-      "POSTNL_CUSTOMER_CODE": "your-customer-code",
-      "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
+  "<servers-key>": {
+    "postnl-mcp": {
+      "command": "npx",
+      "args": ["-y", "postnl-mcp"],
+      "env": {
+        "POSTNL_API_KEY": "your-api-key",
+        "POSTNL_CUSTOMER_CODE": "your-customer-code",
+        "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
+      }
     }
   }
 }
 ```
 
-### Client-Specific Setup
+Host key mapping:
 
-Use [Generic MCP Server Config](#generic-mcp-server-config) as the canonical config and apply only host-specific details below.
-
-Verified against vendor docs on **2026-03-05**.
-
-| Client | Docs | Host-specific notes |
+| Host | Top-level key | Notes |
 |---|---|---|
-| Claude Code | [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp) | Supports `claude mcp add` for stdio/http servers |
-| Codex CLI / IDE | [Codex MCP](https://developers.openai.com/codex/mcp) | CLI + IDE share `~/.codex/config.toml` |
-| Gemini CLI | [Gemini CLI MCP servers](https://google-gemini.github.io/gemini-cli/docs/tools/mcp-server.html) | Configure via `gemini mcp add` or `~/.gemini/settings.json` |
-| VS Code (Copilot) | [Add and manage MCP servers in VS Code](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) | Use `MCP: Add Server` or `.vscode/mcp.json` |
-| Claude Desktop | [Connectors overview](https://claude.com/docs/connectors/overview) | Local config uses `claude_desktop_config.json` |
-| Cursor | [Cursor MCP](https://docs.cursor.com/en/context/mcp) | Uses `mcp.json` schema |
-| Windsurf | [Cascade MCP Integration](https://docs.windsurf.com/windsurf/cascade/mcp) | Uses `mcp_config.json` |
-| Cline | [Adding & Configuring Servers](https://docs.cline.bot/mcp/adding-and-configuring-servers) | Configure MCP servers in Cline settings |
-| Zed | [Zed MCP](https://zed.dev/docs/ai/mcp) | Uses `context_servers` in `settings.json` |
+| VS Code | `servers` | Add `"type": "stdio"` on the server object |
+| Claude Desktop / Cursor / Windsurf / Cline | `mcpServers` | Same command/args/env block |
+| Zed | `context_servers` | Same command/args/env block |
+| Codex CLI (TOML) | `mcp_servers` | Uses TOML, shown below |
 
-CLI quick-add examples:
+### Claude Code
 
 ```bash
-# Claude Code
 claude mcp add --scope user postnl-mcp \
   --env POSTNL_API_KEY=your-api-key \
   --env POSTNL_CUSTOMER_CODE=your-customer-code \
   --env POSTNL_CUSTOMER_NUMBER=your-customer-number \
   -- npx -y postnl-mcp
+```
 
-# Codex
+### Codex CLI (OpenAI)
+
+```bash
 codex mcp add postnl-mcp \
   --env POSTNL_API_KEY=your-api-key \
   --env POSTNL_CUSTOMER_CODE=your-customer-code \
   --env POSTNL_CUSTOMER_NUMBER=your-customer-number \
   -- npx -y postnl-mcp
+```
 
-# Gemini CLI
-gemini mcp add -s user postnl-mcp \
+`~/.codex/config.toml` alternative:
+
+```toml
+[mcp_servers.postnl-mcp]
+command = "npx"
+args = ["-y", "postnl-mcp"]
+env = { "POSTNL_API_KEY" = "your-api-key", "POSTNL_CUSTOMER_CODE" = "your-customer-code", "POSTNL_CUSTOMER_NUMBER" = "your-customer-number" }
+```
+
+### Gemini CLI (Google)
+
+```bash
+gemini mcp add postnl-mcp -- npx -y postnl-mcp
+```
+
+Set `POSTNL_API_KEY`, `POSTNL_CUSTOMER_CODE`, and `POSTNL_CUSTOMER_NUMBER` in `~/.gemini/settings.json`.
+
+### VS Code (Copilot)
+
+Open Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) > `MCP: Add Server` > **Command (stdio)**, or use `.vscode/mcp.json` with top-level key `servers` and the canonical command/args/env block from [Generic MCP Server Config](#generic-mcp-server-config).
+
+### Claude Desktop + Cowork / Cursor / Windsurf / Cline / Zed
+
+Cowork runs inside Claude Desktop and uses the same connected MCP servers and permissions. Configure once in Claude Desktop, then the server is available in Cowork.
+
+Use the canonical config block and place it in the host file below with the matching top-level key.
+
+| Client | Config location | Top-level key |
+|---|---|---|
+| Claude Desktop (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` | `mcpServers` |
+| Claude Desktop (Windows) | `%APPDATA%\\Claude\\claude_desktop_config.json` | `mcpServers` |
+| Cursor (project) | `.cursor/mcp.json` | `mcpServers` |
+| Cursor (global) | `~/.cursor/mcp.json` | `mcpServers` |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` | `mcpServers` |
+| Cline | MCP settings UI | `mcpServers` |
+| Zed (macOS/Linux) | `~/.zed/settings.json` or `~/.config/zed/settings.json` | `context_servers` |
+
+### Docker
+
+```bash
+docker run -i --rm \
   -e POSTNL_API_KEY=your-api-key \
   -e POSTNL_CUSTOMER_CODE=your-customer-code \
   -e POSTNL_CUSTOMER_NUMBER=your-customer-number \
-  npx -y postnl-mcp
+  ghcr.io/bartwaardenburg/postnl-mcp
 ```
 
-### Security Notes
+### Other MCP Clients
 
-- Only connect MCP servers you trust. Servers can execute operations on your behalf.
-- Scope credentials per server and environment (`dev`, `staging`, `prod`) instead of one broad key.
-- Prefer least-privilege credentials and only required PostNL API subscriptions.
-- Keep client-side approval prompts enabled for write/destructive tools.
-- For team setups, keep shared MCP config in version control and review changes.
+Use the values from [Generic MCP Server Config](#generic-mcp-server-config).
+
+## Terminology
+
+What is portable across hosts:
+
+- MCP server runtime settings (`command`, `args`, `env`)
+- Transport model (`stdio` command server)
+- Tool names and tool schemas exposed by this server
+
+What is host/vendor-specific (not portable as-is):
+
+- Host config key names (`servers`, `mcpServers`, `context_servers`, `mcp_servers`)
+- Host UX/workflows for adding servers (CLI commands, UI menus, settings paths)
+- Anthropic-specific concepts such as [Claude Desktop local MCP servers](https://docs.anthropic.com/en/docs/claude-desktop/mcp), [Claude Connectors via remote MCP](https://docs.anthropic.com/en/docs/agents-and-tools/remote-mcp-servers), and [Claude Code plugins](https://docs.anthropic.com/en/docs/claude-code/plugins) used in Cowork workflows
+
+## Security Notes
+
+- **Trust model:** Any prompt or agent allowed to call this MCP server can execute PostNL API actions with the configured credentials.
+- **Least-privilege credentials:** Use separate PostNL credentials per environment/team/use case and only required API subscriptions.
+- **Write-action approvals:** Enable host-side approvals for mutating tools (shipment creation and other write operations).
+- **Team config governance:** Keep shared MCP config in version control, require review for changes to command/args/env/toolset filtering, and keep secrets in a vault or host secret manager (not in plain-text repo files).
 
 </details>
 
