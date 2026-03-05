@@ -7,9 +7,22 @@
 [![CI](https://github.com/bartwaardenburg/postnl-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/bartwaardenburg/postnl-mcp/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/BartWaardenburg/9cfb0ee7e59fa9ea1b0e31d16d0deb5a/raw/postnl-mcp-coverage.json)](https://bartwaardenburg.github.io/postnl-mcp/)
 
+Een [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server voor de [PostNL API](https://developer.postnl.nl/). Maak zendingen aan, genereer barcodes, volg pakketten, bereken bezorgdata en vind afhaalpunten — allemaal via natuurlijke taal in je AI-app.
+
+> **Let op:** Dit is een onofficieel, community-onderhouden project en is niet verbonden aan of goedgekeurd door PostNL.
+
 A community-built [Model Context Protocol](https://modelcontextprotocol.io) (MCP) server for the [PostNL API](https://developer.postnl.nl/). Create shipments, generate barcodes, track parcels, calculate delivery dates, and find pickup locations — all through natural language via any MCP-compatible AI client.
 
 > **Note:** This is an unofficial, community-maintained project and is not affiliated with or endorsed by PostNL.
+
+## Snel starten
+
+Je hoeft deze repo niet te clonen.
+
+1. Zorg dat Node.js 20+ is geïnstalleerd (je AI-app draait `npx` op je machine)
+2. Haal PostNL API-gegevens op (zie [API Key Setup](#api-key-setup))
+3. Voeg de server toe als MCP server in je AI-app (kopieer onderstaande configuratie)
+4. Stel vragen in gewoon Nederlands (zie [Voorbeelden](#voorbeelden))
 
 ## Quick Start (Non-Developers)
 
@@ -385,6 +398,18 @@ PostNL uses different barcode types depending on the shipment:
 | `2928` | Mailbox parcel (brievenbuspakje) |
 
 Evening delivery is not a separate product code — use any compatible product code (e.g. `3085`) with product option `{Characteristic: "118", Option: "006"}` and a `DeliveryDate`.
+
+## Voorbeelden
+
+Eenmaal verbonden kun je in gewoon Nederlands vragen stellen:
+
+- "Genereer een barcode voor een binnenlands pakket"
+- "Maak een zending aan van mijn magazijn op Hoofdstraat 1, Amsterdam naar Kerkstraat 42, Rotterdam"
+- "Volg pakket 3STBJG123456789"
+- "Wat is de verwachte bezorgdatum voor postcode 1234AB als ik vandaag verstuur?"
+- "Toon bezorgtijdvakken voor 2511 BT Den Haag"
+- "Zoek PostNL afhaalpunten bij postcode 3011 AA"
+- "Geef details van PostNL locatie 176227"
 
 ## Example Usage
 
