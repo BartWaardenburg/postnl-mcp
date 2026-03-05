@@ -1,6 +1,6 @@
 {
   "name": "postnl-mcp",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "packageManager": "pnpm@10.28.1",
   "description": "MCP server for the PostNL Shipping API — create shipments, generate barcodes, track parcels, and find pickup locations",
   "type": "module",
