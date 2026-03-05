@@ -11,6 +11,75 @@ A community-built [Model Context Protocol](https://modelcontextprotocol.io) (MCP
 
 > **Note:** This is an unofficial, community-maintained project and is not affiliated with or endorsed by PostNL.
 
+## Quick Start (Non-Developers)
+
+You do not need to clone this repo.
+
+1. Make sure Node.js 20+ is installed (your AI app will run `npx` on your machine)
+2. Get PostNL credentials (see [API Key Setup](#api-key-setup))
+3. Add this as an MCP server in your AI app (copy/paste config below)
+4. Ask plain-language shipping/tracking questions (see [Example Usage](#example-usage))
+
+### Add To Claude Desktop (Also Works In Cowork)
+
+Cowork runs inside Claude Desktop and uses the same connected MCP servers and permissions.
+
+1. Open your Claude Desktop MCP config file:
+   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - Windows: `%APPDATA%\\Claude\\claude_desktop_config.json`
+2. Add this server entry (or merge into existing `mcpServers`):
+
+```json
+{
+  "mcpServers": {
+    "postnl-mcp": {
+      "command": "npx",
+      "args": ["-y", "postnl-mcp"],
+      "env": {
+        "POSTNL_API_KEY": "your-api-key",
+        "POSTNL_CUSTOMER_CODE": "your-customer-code",
+        "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
+      }
+    }
+  }
+}
+```
+
+3. Restart Claude Desktop
+
+### Add To Other AI Apps
+
+Most MCP apps have an "Add MCP Server" screen where you can fill in:
+
+- Command: `npx`
+- Args: `-y postnl-mcp`
+- Env: `POSTNL_API_KEY=...`, `POSTNL_CUSTOMER_CODE=...`, `POSTNL_CUSTOMER_NUMBER=...`
+
+If your app wants JSON, paste this and adapt the top-level key name to your client (common keys are `mcpServers`, `servers`, or `context_servers`):
+
+```json
+{
+  "postnl-mcp": {
+    "command": "npx",
+    "args": ["-y", "postnl-mcp"],
+    "env": {
+      "POSTNL_API_KEY": "your-api-key",
+      "POSTNL_CUSTOMER_CODE": "your-customer-code",
+      "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
+    }
+  }
+}
+```
+
+### Troubleshooting
+
+- Error: `Missing required env vars` or startup validation errors.
+  - Fix: add `POSTNL_API_KEY`, `POSTNL_CUSTOMER_CODE`, and `POSTNL_CUSTOMER_NUMBER` to server `env` and restart your app.
+- Error: `npx: command not found` or server fails to start.
+  - Fix: install Node.js 20+ and restart your app.
+- Connected but API calls fail with `401/403` or empty business data.
+  - Fix: verify PostNL API subscriptions for the tools you use (see [Required API Subscriptions](#required-api-subscriptions)).
+
 ## Features
 
 - **7 tools** across 4 categories covering the PostNL Shipping APIs
@@ -29,150 +98,113 @@ A community-built [Model Context Protocol](https://modelcontextprotocol.io) (MCP
 
 ## Supported Clients
 
-This MCP server works with any client that supports the Model Context Protocol, including:
+<details>
+<summary><strong>Advanced setup and supported clients (expand)</strong></summary>
 
-| Client | Easiest install |
+This MCP server is not tied to one coding agent. It works with any MCP-compatible client/runtime that can start a stdio MCP server.
+
+| Client / runtime | Easiest setup |
 |---|---|
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | One-liner: `claude mcp add` |
-| [Codex CLI](https://github.com/openai/codex) (OpenAI) | One-liner: `codex mcp add` |
-| [Gemini CLI](https://github.com/google-gemini/gemini-cli) (Google) | One-liner: `gemini mcp add` |
-| [VS Code](https://code.visualstudio.com/) (Copilot) | Command Palette: `MCP: Add Server` |
-| [Claude Desktop](https://claude.ai/download) | JSON config file |
-| [Cursor](https://cursor.com) | JSON config file |
-| [Windsurf](https://codeium.com/windsurf) | JSON config file |
-| [Cline](https://github.com/cline/cline) | UI settings |
-| [Zed](https://zed.dev) | JSON settings file |
+| Claude Desktop + Cowork | JSON config (`claude_desktop_config.json`) |
+| Claude Code | One-liner: `claude mcp add` |
+| Codex CLI / IDE | One-liner: `codex mcp add` |
+| Gemini CLI | One-liner: `gemini mcp add` |
+| VS Code (Copilot) | Command Palette: `MCP: Add Server` |
+| Cursor | JSON config file |
+| Windsurf | JSON config file |
+| Cline | UI settings |
+| Zed | JSON settings file |
+| Any other MCP host | Use command/args/env from [Generic MCP Server Config](#generic-mcp-server-config) |
 
-## Installation
+### Claude Ecosystem Notes
 
-### Claude Code
+Claude has several concepts that are easy to mix up:
+
+- **Local MCP servers (Claude Desktop):** configured in `claude_desktop_config.json` and started on your machine ([docs](https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop)).
+- **Cowork:** reuses MCP servers connected in Claude Desktop ([docs](https://support.claude.com/en/articles/13345190-get-started-with-cowork)).
+- **Connectors:** remote integrations managed in Claude ([docs](https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities)).
+- **Cowork plugins:** Claude-specific workflow packaging ([docs](https://support.claude.com/en/articles/13837440-use-plugins-in-cowork)). Useful in Claude, not portable as generic MCP server config in other hosts.
+
+### Setup (Power Users)
+
+If Quick Start works in your client, you can skip this section.
+
+### Generic MCP Server Config
+
+Use this canonical config for any stdio-capable MCP host:
+
+- **Command:** `npx`
+- **Args:** `["-y", "postnl-mcp"]`
+- **Required env vars:** `POSTNL_API_KEY`, `POSTNL_CUSTOMER_CODE`, `POSTNL_CUSTOMER_NUMBER` (see [Required](#required))
+
+Minimal JSON shape (adapt key names to your client, e.g. `mcpServers`, `servers`, or `context_servers`):
+
+```json
+{
+  "postnl-mcp": {
+    "command": "npx",
+    "args": ["-y", "postnl-mcp"],
+    "env": {
+      "POSTNL_API_KEY": "your-api-key",
+      "POSTNL_CUSTOMER_CODE": "your-customer-code",
+      "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
+    }
+  }
+}
+```
+
+### Client-Specific Setup
+
+Use [Generic MCP Server Config](#generic-mcp-server-config) as the canonical config and apply only host-specific details below.
+
+Verified against vendor docs on **2026-03-05**.
+
+| Client | Docs | Host-specific notes |
+|---|---|---|
+| Claude Code | [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp) | Supports `claude mcp add` for stdio/http servers |
+| Codex CLI / IDE | [Codex MCP](https://developers.openai.com/codex/mcp) | CLI + IDE share `~/.codex/config.toml` |
+| Gemini CLI | [Gemini CLI MCP servers](https://google-gemini.github.io/gemini-cli/docs/tools/mcp-server.html) | Configure via `gemini mcp add` or `~/.gemini/settings.json` |
+| VS Code (Copilot) | [Add and manage MCP servers in VS Code](https://code.visualstudio.com/docs/copilot/customization/mcp-servers) | Use `MCP: Add Server` or `.vscode/mcp.json` |
+| Claude Desktop | [Connectors overview](https://claude.com/docs/connectors/overview) | Local config uses `claude_desktop_config.json` |
+| Cursor | [Cursor MCP](https://docs.cursor.com/en/context/mcp) | Uses `mcp.json` schema |
+| Windsurf | [Cascade MCP Integration](https://docs.windsurf.com/windsurf/cascade/mcp) | Uses `mcp_config.json` |
+| Cline | [Adding & Configuring Servers](https://docs.cline.bot/mcp/adding-and-configuring-servers) | Configure MCP servers in Cline settings |
+| Zed | [Zed MCP](https://zed.dev/docs/ai/mcp) | Uses `context_servers` in `settings.json` |
+
+CLI quick-add examples:
 
 ```bash
+# Claude Code
 claude mcp add --scope user postnl-mcp \
   --env POSTNL_API_KEY=your-api-key \
   --env POSTNL_CUSTOMER_CODE=your-customer-code \
   --env POSTNL_CUSTOMER_NUMBER=your-customer-number \
   -- npx -y postnl-mcp
-```
 
-### Codex CLI (OpenAI)
-
-```bash
+# Codex
 codex mcp add postnl-mcp \
   --env POSTNL_API_KEY=your-api-key \
   --env POSTNL_CUSTOMER_CODE=your-customer-code \
   --env POSTNL_CUSTOMER_NUMBER=your-customer-number \
   -- npx -y postnl-mcp
-```
 
-### Gemini CLI (Google)
-
-```bash
-gemini mcp add postnl-mcp -- npx -y postnl-mcp
-```
-
-Set environment variables `POSTNL_API_KEY`, `POSTNL_CUSTOMER_CODE`, and `POSTNL_CUSTOMER_NUMBER` separately via `~/.gemini/settings.json`.
-
-### VS Code (Copilot)
-
-Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) > `MCP: Add Server` > select **Command (stdio)**.
-
-Or add to `.vscode/mcp.json` in your project directory:
-
-```json
-{
-  "servers": {
-    "postnl-mcp": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "postnl-mcp"],
-      "env": {
-        "POSTNL_API_KEY": "your-api-key",
-        "POSTNL_CUSTOMER_CODE": "your-customer-code",
-        "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
-      }
-    }
-  }
-}
-```
-
-### Claude Desktop / Cursor / Windsurf / Cline
-
-These clients share the same JSON format. Add the config below to the appropriate file:
-
-| Client | Config file |
-|---|---|
-| Claude Desktop (macOS) | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| Claude Desktop (Windows) | `%APPDATA%\Claude\claude_desktop_config.json` |
-| Cursor (project) | `.cursor/mcp.json` |
-| Cursor (global) | `~/.cursor/mcp.json` |
-| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
-| Cline | Settings > MCP Servers > Edit |
-
-```json
-{
-  "mcpServers": {
-    "postnl-mcp": {
-      "command": "npx",
-      "args": ["-y", "postnl-mcp"],
-      "env": {
-        "POSTNL_API_KEY": "your-api-key",
-        "POSTNL_CUSTOMER_CODE": "your-customer-code",
-        "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
-      }
-    }
-  }
-}
-```
-
-### Zed
-
-Add to your Zed settings (`~/.zed/settings.json` on macOS, `~/.config/zed/settings.json` on Linux):
-
-```json
-{
-  "context_servers": {
-    "postnl-mcp": {
-      "command": "npx",
-      "args": ["-y", "postnl-mcp"],
-      "env": {
-        "POSTNL_API_KEY": "your-api-key",
-        "POSTNL_CUSTOMER_CODE": "your-customer-code",
-        "POSTNL_CUSTOMER_NUMBER": "your-customer-number"
-      }
-    }
-  }
-}
-```
-
-### Docker
-
-```bash
-docker run -i --rm \
+# Gemini CLI
+gemini mcp add -s user postnl-mcp \
   -e POSTNL_API_KEY=your-api-key \
   -e POSTNL_CUSTOMER_CODE=your-customer-code \
   -e POSTNL_CUSTOMER_NUMBER=your-customer-number \
-  ghcr.io/bartwaardenburg/postnl-mcp
+  npx -y postnl-mcp
 ```
 
-### Codex CLI (TOML config alternative)
+### Security Notes
 
-If you prefer editing `~/.codex/config.toml` directly:
+- Only connect MCP servers you trust. Servers can execute operations on your behalf.
+- Scope credentials per server and environment (`dev`, `staging`, `prod`) instead of one broad key.
+- Prefer least-privilege credentials and only required PostNL API subscriptions.
+- Keep client-side approval prompts enabled for write/destructive tools.
+- For team setups, keep shared MCP config in version control and review changes.
 
-```toml
-[mcp_servers.postnl-mcp]
-command = "npx"
-args = ["-y", "postnl-mcp"]
-env = { "POSTNL_API_KEY" = "your-api-key", "POSTNL_CUSTOMER_CODE" = "your-customer-code", "POSTNL_CUSTOMER_NUMBER" = "your-customer-number" }
-```
-
-### Other MCP Clients
-
-For any MCP-compatible client, use this server configuration:
-
-- **Command:** `npx`
-- **Args:** `["-y", "postnl-mcp"]`
-- **Environment variables:** `POSTNL_API_KEY`, `POSTNL_CUSTOMER_CODE`, and `POSTNL_CUSTOMER_NUMBER`
+</details>
 
 ## Configuration
 
