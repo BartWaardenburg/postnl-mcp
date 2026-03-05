@@ -153,7 +153,7 @@ export class PostNLClient {
       query.set("City", options.city);
     }
     if (options.houseNr) {
-      query.set("HouseNr", options.houseNr);
+      query.set("HouseNumber", options.houseNr);
     }
     if (options.houseNrExt) {
       query.set("HouseNrExt", options.houseNrExt);
@@ -281,12 +281,17 @@ export class PostNLClient {
   // --- Address Validation ---
 
   async validateAddress(address: PostNLAddressCheckRequest): Promise<PostNLAddressCheckResponse[]> {
+    const query = new URLSearchParams({
+      postalcode: address.PostalCode,
+      housenumber: String(address.HouseNumber),
+    });
+
+    if (address.HouseNumberAddition) {
+      query.set("housenumberaddition", address.HouseNumberAddition);
+    }
+
     return this.request<PostNLAddressCheckResponse[]>(
-      "/shipment/v1/checkout/address/check",
-      {
-        method: "POST",
-        body: JSON.stringify([address]),
-      },
+      `/shipment/checkout/v1/postalcodecheck?${query.toString()}`,
     );
   }
 

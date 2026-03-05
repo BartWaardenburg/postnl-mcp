@@ -14,7 +14,7 @@ A community-built [Model Context Protocol](https://modelcontextprotocol.io) (MCP
 ## Features
 
 - **7 tools** across 4 categories covering the PostNL Shipping APIs
-- **Barcode generation** for domestic (3S), evening delivery (3SDEPA), and international (LA/RI/UE) shipments
+- **Barcode generation** for domestic (3S), mailbox (2S), EU (CC/CP/CD/CF), and international (LA/RI/UE) shipments
 - **Shipment creation** with shipping label generation (PDF or ZPL format)
 - **Parcel tracking** with full status history and event timeline
 - **Delivery date calculation** with origin country and postal code support
@@ -222,7 +222,7 @@ Depending on which tools you use, subscribe to:
 
 | Tool | Description |
 |---|---|
-| `generate_barcode` | Generate a PostNL barcode for shipping (types: 3S domestic, 3SDEPA evening, LA/RI/UE international) |
+| `generate_barcode` | Generate a PostNL barcode for shipping (types: 2S mailbox, 3S domestic, CC/CP/CD/CF EU, LA/RI/UE international) |
 | `create_shipment` | Create a shipment with label generation — provide sender/receiver address, get a PDF or ZPL shipping label back |
 
 ### Tracking
@@ -268,8 +268,12 @@ PostNL uses different barcode types depending on the shipment:
 
 | Type | Description | Serie format |
 |---|---|---|
+| `2S` | Mailbox parcel | `000000000-999999999` |
 | `3S` | Standard domestic parcel | `000000000-999999999` |
-| `3SDEPA` | Evening delivery parcel | `000000000-999999999` |
+| `CC` | EU consumer parcel | `000000000-999999999` |
+| `CP` | EU compact parcel | `000000000-999999999` |
+| `CD` | EU standard parcel | `000000000-999999999` |
+| `CF` | EU bulk parcel | `000000000-999999999` |
 | `LA` | International Letter Registered | `000000000-999999999` |
 | `RI` | International Registered Shipment | `000000000-999999999` |
 | `UE` | International EMS | `000000000-999999999` |
@@ -278,11 +282,19 @@ PostNL uses different barcode types depending on the shipment:
 
 | Code | Description |
 |---|---|
-| `3085` | Standard domestic shipment |
-| `3385` | Evening delivery |
-| `3090` | Pickup at PostNL point |
-| `3089` | Delivery with age check (18+) |
-| `3087` | Extra@Home (large items) |
+| `3085` | Standard shipment |
+| `3385` | Deliver to stated address only |
+| `3090` | Delivery to neighbour + return when not home |
+| `3087` | Extra cover |
+| `3089` | Signature on delivery + deliver to stated address only |
+| `3189` | Signature on delivery |
+| `3533` | Pickup + signature on delivery |
+| `3534` | Pickup + extra cover |
+| `3543` | Pickup + signature on delivery + notification |
+| `3438` | Age check (18+) |
+| `2928` | Mailbox parcel (brievenbuspakje) |
+
+Evening delivery is not a separate product code — use any compatible product code (e.g. `3085`) with product option `{Characteristic: "118", Option: "006"}` and a `DeliveryDate`.
 
 ## Example Usage
 

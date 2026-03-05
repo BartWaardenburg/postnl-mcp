@@ -289,7 +289,7 @@ export interface PostNLTimeframe {
 }
 
 export interface PostNLTimeframeDetail {
-  TimeframeTimeFrame?: PostNLTimeframeTimeFrame[];
+  TimeframeTimeframe?: PostNLTimeframeTimeFrame[];
 }
 
 export interface PostNLTimeframeTimeFrame {
@@ -390,17 +390,13 @@ export interface PostNLAddressCheckRequest {
   PostalCode: string;
   HouseNumber: number;
   HouseNumberAddition?: string;
-  City?: string;
-  Street?: string;
-  CountryCode?: string;
 }
 
 export interface PostNLAddressCheckResponse {
-  City?: string;
-  FormattedAddress?: string[];
-  HouseNumber?: number;
-  HouseNumberAddition?: string;
-  PostalCode?: string;
-  Street?: string;
-  Status?: string;
+  city?: string;
+  postalCode?: string;
+  streetName?: string;
+  houseNumber?: number;
+  houseNumberAddition?: string;
+  formattedAddress?: string[];
 }

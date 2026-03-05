@@ -382,7 +382,7 @@ describe("Delivery Tools", () => {
             {
               Date: "01-07-2024",
               Timeframes: {
-                TimeframeTimeFrame: [
+                TimeframeTimeframe: [
                   { From: "09:00:00", To: "12:00:00", Options: { string: ["Daytime"] } },
                   { From: "18:00:00", To: "21:00:00", Options: { string: ["Evening"] } },
                 ],

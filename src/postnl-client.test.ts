@@ -377,9 +377,19 @@ describe("PostNLClient", () => {
 
       await client.validateAddress({ PostalCode: "1234AB", HouseNumber: 1 });
 
-      const [url, init] = mockFetch.mock.calls[0];
-      expect(url).toContain("/shipment/v1/checkout/address/check");
-      expect(init.method).toBe("POST");
+      const [url] = mockFetch.mock.calls[0];
+      expect(url).toContain("/shipment/checkout/v1/postalcodecheck");
+      expect(url).toContain("postalcode=1234AB");
+      expect(url).toContain("housenumber=1");
+    });
+
+    it("includes housenumberaddition for validateAddress when provided", async () => {
+      mockFetch.mockResolvedValueOnce(jsonResponse([]));
+
+      await client.validateAddress({ PostalCode: "1234AB", HouseNumber: 1, HouseNumberAddition: "bis" });
+
+      const [url] = mockFetch.mock.calls[0];
+      expect(url).toContain("housenumberaddition=bis");
     });
 
     it("includes range parameter for generateBarcode when provided", async () => {
@@ -411,7 +421,7 @@ describe("PostNLClient", () => {
       expect(url).toContain("ShippingDuration=1");
       expect(url).toContain("CutOffTime=16%3A00%3A00");
       expect(url).toContain("City=Amsterdam");
-      expect(url).toContain("HouseNr=1");
+      expect(url).toContain("HouseNumber=1");
       expect(url).toContain("HouseNrExt=A");
       expect(url).toContain("Options=Daytime");
       expect(url).toContain("Options=Evening");

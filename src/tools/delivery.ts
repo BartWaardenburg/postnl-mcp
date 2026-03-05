@@ -114,7 +114,7 @@ export const registerDeliveryTools = (
           lines.push("Available delivery timeframes:");
           for (const tf of timeframes) {
             lines.push(`  ${tf.Date ?? "Unknown date"}:`);
-            const frames = tf.Timeframes?.TimeframeTimeFrame ?? [];
+            const frames = tf.Timeframes?.TimeframeTimeframe ?? [];
             for (const frame of frames) {
               const opts = frame.Options?.string?.join(", ") ?? "";
               lines.push(`    - ${frame.From ?? "?"} - ${frame.To ?? "?"}${opts ? ` (${opts})` : ""}`);

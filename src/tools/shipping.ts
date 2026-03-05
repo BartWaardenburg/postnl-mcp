@@ -71,12 +71,12 @@ export const registerShippingTools = (
       title: "Generate Barcode",
       description:
         "Generate a PostNL barcode for shipping. The barcode is required before creating a shipment. " +
-        "Types: 3S (domestic NL parcels), 3SDEPA (evening/Sunday delivery), LA (EU parcels), " +
-        "RI (registered international), UE (non-EU parcels).",
+        "Types: 2S (mailbox parcel), 3S (domestic NL parcels), CC/CP/CD/CF (EU parcels), " +
+        "LA (EU letter), RI (registered international), UE (non-EU parcels).",
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
 
       inputSchema: z.object({
-        type: z.enum(["3S", "3SDEPA", "LA", "RI", "UE"]).default("3S").describe("Barcode type. 3S = domestic, LA = EU, RI = registered international, UE = non-EU"),
+        type: z.enum(["2S", "3S", "CC", "CP", "CD", "CF", "LA", "RI", "UE"]).default("3S").describe("Barcode type. 2S = mailbox parcel, 3S = domestic, CC = EU consumer parcel, CP = EU compact, CD = EU parcel, CF = EU bulk, LA = EU letter, RI = registered international, UE = non-EU"),
         serie: z.string().default("000000000-999999999").describe("Barcode serie range"),
         range: z.string().optional().describe("Customer code override (defaults to env POSTNL_CUSTOMER_CODE)"),
       }),
@@ -107,8 +107,9 @@ export const registerShippingTools = (
       description:
         "Create a PostNL shipment and generate a shipping label. Requires a barcode (use generate_barcode first), " +
         "sender address (AddressType 02), and receiver address (AddressType 01). Returns a PDF label as base64. " +
-        "Common product codes: 3085 (standard), 3385 (evening delivery), 3090 (PostNL pickup point), " +
-        "3087 (extra@home), 3089 (signature on delivery). " +
+        "Common product codes: 3085 (standard), 3385 (stated address only), 3090 (neighbour + return), " +
+        "3087 (extra cover), 3089 (signature on delivery), 3533/3534 (pickup point). " +
+        "Evening delivery: use product option {Characteristic: '118', Option: '006'} with a DeliveryDate. " +
         "WARNING: Creating a shipment incurs shipping costs. Always confirm with the user before calling this tool.",
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
 
