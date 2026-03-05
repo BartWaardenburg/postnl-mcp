@@ -1,5 +1,12 @@
 # Changelog
 
+# [](https://github.com/BartWaardenburg/postnl-mcp/compare/v0.2.1...vnull) (2026-03-05)
+
+
+### Bug Fixes
+
+* align API endpoints, types, and product codes with PostNL sandbox swagger specs ([90d8cd8](https://github.com/BartWaardenburg/postnl-mcp/commit/90d8cd8b97ce6fc1482bdf8763f5878cd53184f1))
+
 ## [0.2.1](https://github.com/BartWaardenburg/postnl-mcp/compare/v0.2.0...v0.2.1) (2026-03-04)
 
 # 0.2.0 (2026-03-04)
