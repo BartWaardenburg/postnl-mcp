@@ -1,16 +1,66 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.BartWaardenburg/postnl-mcp",
+  "title": "PostNL",
   "description": "Create shipments, generate barcodes, track parcels, and find pickup locations via the PostNL API",
-  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/BartWaardenburg/postnl-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://developer.postnl.nl/",
+  "version": "0.2.3",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "postnl-mcp",
-      "version": "0.1.0",
+      "version": "0.2.3",
       "transport": {
         "type": "stdio"
-      }
+      },
+      "environmentVariables": [
+        {
+          "name": "POSTNL_API_KEY",
+          "description": "PostNL API key.",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "POSTNL_CUSTOMER_CODE",
+          "description": "PostNL customer code, used for barcodes and shipments.",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "POSTNL_CUSTOMER_NUMBER",
+          "description": "PostNL customer number, used in shipment requests.",
+          "isRequired": true,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "POSTNL_CACHE_TTL",
+          "description": "Response cache lifetime in seconds. Use 0 to turn the cache off.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "POSTNL_MAX_RETRIES",
+          "description": "Maximum retries for rate-limited requests.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "POSTNL_TOOLSETS",
+          "description": "Comma-separated tool categories to enable: shipping, tracking, delivery, locations.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
     }
   ]
 }
