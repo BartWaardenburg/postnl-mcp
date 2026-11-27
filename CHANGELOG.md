@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1](https://github.com/BartWaardenburg/postnl-mcp/compare/v0.3.0...v0.3.1) (2026-11-27)
+
+### Bug Fixes
+
+* copy pnpm-workspace.yaml into the Docker build and build the image in CI ([b0e33dd](https://github.com/BartWaardenburg/postnl-mcp/commit/b0e33dd6d9ac753eca771e084db99a8ca44569e9))
+
 # [0.3.0](https://github.com/BartWaardenburg/postnl-mcp/compare/v0.2.3...v0.3.0) (2026-11-27)
 
 ### Features
