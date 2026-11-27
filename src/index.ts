@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { createRequire } from "node:module";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { serveStdio } from "@modelcontextprotocol/server/stdio";
 import { PostNLClient } from "./postnl-client.js";
 import { createServer, parseToolsets } from "./server.js";
 import { checkForUpdate } from "./update-checker.js";
@@ -31,16 +31,11 @@ const maxRetries = process.env.POSTNL_MAX_RETRIES !== undefined
   : 3;
 const client = new PostNLClient(apiKey, undefined, cacheTtl, { maxRetries });
 const toolsets = parseToolsets(process.env.POSTNL_TOOLSETS);
-const server = createServer(client, customerCode, customerNumber, toolsets);
 
-const main = async (): Promise<void> => {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  // Fire-and-forget — don't block server startup
-  void checkForUpdate(name, version);
-};
-
-main().catch((error) => {
-  console.error("PostNL MCP server failed:", error);
-  process.exit(1);
+// serveStdio serves 2026-07-28 clients and clients that open with the 2025 handshake.
+serveStdio(() => createServer(client, customerCode, customerNumber, toolsets), {
+  onerror: (error) => console.error("PostNL MCP server error:", error),
 });
+
+// Do not wait for the update check: the server must start at once.
+void checkForUpdate(name, version);

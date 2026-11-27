@@ -15,6 +15,8 @@ A community-built [Model Context Protocol](https://modelcontextprotocol.io) (MCP
 
 > **Note:** This is an unofficial, community-maintained project and is not affiliated with or endorsed by PostNL.
 
+The server supports MCP specification 2026-07-28. Clients that use the 2025 handshake also work.
+
 ## Snel starten
 
 Je hoeft deze repo niet te clonen.
