@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.1](https://github.com/BartWaardenburg/postnl-mcp/compare/v0.3.0...v0.3.1) (2026-11-27)
+
+### Bug Fixes
+
+* copy pnpm-workspace.yaml into the Docker build and build the image in CI ([b0e33dd](https://github.com/BartWaardenburg/postnl-mcp/commit/b0e33dd6d9ac753eca771e084db99a8ca44569e9))
+
+# [0.3.0](https://github.com/BartWaardenburg/postnl-mcp/compare/v0.2.3...v0.3.0) (2026-11-27)
+
+### Features
+
+* move to MCP TypeScript SDK v2 and spec 2026-07-28 ([#4](https://github.com/BartWaardenburg/postnl-mcp/issues/4)) ([341b0d6](https://github.com/BartWaardenburg/postnl-mcp/commit/341b0d688d43d58e3633c98e7435a12800c8bda4))
+
 ## [0.2.3](https://github.com/BartWaardenburg/postnl-mcp/compare/v0.2.1...v0.2.3) (2026-03-05)
 
 
